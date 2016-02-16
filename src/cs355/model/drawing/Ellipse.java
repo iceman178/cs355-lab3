@@ -77,18 +77,15 @@ public class Ellipse extends Shape {
 	{
 		boolean result = false;
 		
-		double lengthX = pt.getX() - center.getX();
-		double lengthY = pt.getY() - center.getY();
+		double radiusX = width/2 + tolerance;
+		double radiusY = height/2 + tolerance;
+		double diameterX = Math.pow(pt.getX(), 2) / Math.pow(radiusX, 2);
+		double diameterY = Math.pow(pt.getY(), 2) / Math.pow(radiusY, 2);
 		
-		double distanceX = (double)Math.pow(lengthX, 2) / (double)Math.pow(width, 2);
-		double distanceY = (double)Math.pow(lengthY, 2) / (double)Math.pow(height, 2);
-		
-		if (distanceX + distanceY <= 1)
+		if (diameterX + diameterY <= 1)
 		{
-			//System.out.println("\tEllipse selected");
 			result = true;
-		}
-				
+		}		
 		return result;
 	}
 

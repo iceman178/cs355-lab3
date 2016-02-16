@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cs355.GUIFunctions;
+import cs355.controller.Controller;
+
 public class Model extends CS355Drawing {
 
 	//Use a singleton so that the model can be accessed by the view when repainting
@@ -139,14 +142,33 @@ public class Model extends CS355Drawing {
 	{
 		boolean result = false;
 		curShapeIndex = -1;
+		double tolerance = 0;
 		
 		for(int a = shapes.size() - 1; a >= 0; a--)
 		{
-			result = shapes.get(a).pointInShape(curClick, 0);
+			Shape s = shapes.get(a);
+			Point2D.Double ptCopy = new Point2D.Double(curClick.getX(), curClick.getY());
 			
-			if (result == true)
+			if (s.getShapeType() != Shape.type.LINE)
 			{
-				return curShapeIndex = a;
+				// Changes the coordinates from view->world->object
+				AffineTransform viewToObject = Controller.instance().viewToObject(s);
+				viewToObject.transform(ptCopy, ptCopy);
+			}
+			else
+			{
+				// Changes the coordinates from view->world
+				AffineTransform viewToWorld = Controller.instance().viewToWorld();
+				viewToWorld.transform(ptCopy, ptCopy);
+			}
+			
+			result = shapes.get(a).pointInShape(curClick, 0);
+			if (s.pointInShape(ptCopy, tolerance))
+			{
+				curShapeIndex = a;
+				selectedColor = s.getColor();
+				GUIFunctions.changeSelectedColor(selectedColor);
+				return curShapeIndex;
 			}
 		}
 		return curShapeIndex;
@@ -179,13 +201,12 @@ public class Model extends CS355Drawing {
 			default:
 				break;
 		}
-		if(height!=-1)
+		if(height != -1)
 		{
 			Point2D.Double ptCopy = new Point2D.Double(pt.getX(), pt.getY());
-			AffineTransform worldToObj = new AffineTransform();
-			worldToObj.rotate(-shape.getRotation());
-			worldToObj.translate(-shape.getCenter().getX(),-shape.getCenter().getY());
-			worldToObj.transform(ptCopy, ptCopy);
+			// changes the coordinates from view->world->object
+			AffineTransform viewToObj = Controller.instance().viewToObject(shape);
+			viewToObj.transform(ptCopy, ptCopy);
 			double yDiff = ptCopy.getY()+((height/2) + 9);
 			
 			double distance = Math.sqrt(Math.pow(ptCopy.getX(), 2) + Math.pow(yDiff, 2));
@@ -194,10 +215,9 @@ public class Model extends CS355Drawing {
 		if(shape.getShapeType().equals(Shape.type.TRIANGLE))
 		{
 			Point2D.Double ptCopy = new Point2D.Double(pt.getX(), pt.getY());
-			AffineTransform worldToObj = new AffineTransform();
-			worldToObj.rotate(-shape.getRotation());
-			worldToObj.translate(-shape.getCenter().getX(),-shape.getCenter().getY());
-			worldToObj.transform(ptCopy, ptCopy); // Transform pt to object coordinates
+			// changes the coordinates from view->world->object
+			AffineTransform viewToObj = Controller.instance().viewToObject(shape);
+			viewToObj.transform(ptCopy, ptCopy); //transform pt to object coordinates
 			
 			Triangle triangle = (Triangle)shape;
 			double ax = triangle.getA().getX()-triangle.getCenter().getX();

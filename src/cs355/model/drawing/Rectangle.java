@@ -79,10 +79,8 @@ public class Rectangle extends Shape {
 		double boundaryX = width/2;
 		double boundaryY = height/2;
 		
-		if (((pt.getX() >= center.getX() - boundaryX) && (pt.getX() <= center.getX() + boundaryX)) &&
-			((pt.getY() >= center.getY() - boundaryY) && (pt.getY() <= center.getY() + boundaryY)) )
+		if ( (-boundaryX<=pt.getX() && pt.getX()<=boundaryX) && (-boundaryY<=pt.getY() && pt.getY()<=boundaryY) )
 		{
-			//System.out.println("\tRectangle selected");
 			result = true;
 		}
 		return result;

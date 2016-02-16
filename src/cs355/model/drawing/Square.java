@@ -57,10 +57,8 @@ public class Square extends Shape {
 		boolean result = false;
 		double boundary = size/2;
 		
-		if (((pt.getX() >= center.getX() - boundary) && (pt.getX() <= center.getX() + boundary)) &&
-			((pt.getY() >= center.getY() - boundary) && (pt.getY() <= center.getY() + boundary)) )
+		if( (-boundary<=pt.getX() && pt.getX()<=boundary) && (-boundary<=pt.getY() && pt.getY()<=boundary) )
 		{
-			//System.out.println("\tSquare selected");
 			result = true;
 		}
 		return result;

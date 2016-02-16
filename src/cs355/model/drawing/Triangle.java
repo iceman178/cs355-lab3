@@ -8,7 +8,8 @@ import java.awt.geom.Point2D;
  * Add your triangle code here. You can add fields, but you cannot
  * change the ones that already exist. This includes the names!
  */
-public class Triangle extends Shape {
+public class Triangle extends Shape 
+{
 
 	// The three points of the triangle.
 	private Point2D.Double a;
@@ -96,10 +97,6 @@ public class Triangle extends Shape {
 	public boolean pointInShape(Point2D.Double pt, double tolerance) 
 	{
 		boolean result = false;
-		AffineTransform worldToObj = new AffineTransform();
-		worldToObj.rotate(-rotation);
-		worldToObj.translate(-center.getX(), -center.getY());
-		worldToObj.transform(pt, pt);
 		
 		double ax = a.getX() - center.getX();
 		double bx = b.getX() - center.getX();
@@ -119,7 +116,6 @@ public class Triangle extends Shape {
 		
 		if ((area1+area2+area3) == area)
 		{
-			//System.out.println("\tTriangle selected");
 			result = true;
 		}
 		return result;

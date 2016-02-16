@@ -55,14 +55,10 @@ public class Circle extends Shape {
 	public boolean pointInShape(Point2D.Double pt, double tolerance) 
 	{
 		boolean result = false;
+		double distanceFromCenter = Math.sqrt(Math.pow(pt.getX(), 2) + Math.pow(pt.getY(), 2));
 		
-		double lengthX = pt.getX() - center.getX();
-		double lengthY = pt.getY() - center.getY();	
-		double distanceFromCenter = Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2));
-		
-		if (distanceFromCenter <= radius)
+		if (distanceFromCenter <= radius + tolerance)
 		{
-			//System.out.println("\tCircle Selected");
 			result = true;
 		}
 		return result;

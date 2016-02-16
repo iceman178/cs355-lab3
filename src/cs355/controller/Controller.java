@@ -2,6 +2,7 @@ package cs355.controller;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -20,7 +21,17 @@ public class Controller implements CS355Controller {
 	private Point2D.Double mouseDragStart = null;
 	private ArrayList<Point2D.Double> trianglePoints = new ArrayList<>();
 	private Mode curControllerMode = Mode.NONE;
+	private double zoom = 1.0;
+	private static Controller _instance;
 	
+	
+	public static Controller instance() 
+	{
+		if (_instance == null) 
+			_instance = new Controller();
+		return _instance;
+	}
+
 	public enum Mode 
 	{
 		SHAPE, SELECT, ZOOM_IN, ZOOM_OUT, NONE
@@ -35,6 +46,7 @@ public class Controller implements CS355Controller {
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
 	{
+		//System.out.println("Clicked X=" + arg0.getX() + " Y=" + arg0.getY());
 		if (curControllerMode == Mode.SELECT)
 		{
 			Point2D.Double curClick = new Point2D.Double(arg0.getX(), arg0.getY());
@@ -503,6 +515,66 @@ public class Controller implements CS355Controller {
 		GUIFunctions.refresh();
 	}
 	
+	//-----------------------------TRANSFORM FUNCTIONS----------------------------------------TODO
+	
+	public AffineTransform objectToWorld(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		//Translation
+		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, shape.getCenter().getX(), shape.getCenter().getY()));
+		//Rotation
+		transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), Math.sin(shape.getRotation()), -Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0, 0));
+		return transform;
+	}
+	
+	public AffineTransform worldToView() {
+		AffineTransform transform = new AffineTransform();
+		//Scale
+        transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0));
+        //Translation
+		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -256 + 256*(1/zoom), -256 + 256*(1/zoom)));
+		return transform;
+	}
+
+	public AffineTransform objectToView(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		// World to View
+        transform.concatenate(worldToView());
+		// Object to World
+		transform.concatenate(objectToWorld(shape));
+		return transform;
+	}
+	
+	public AffineTransform viewToWorld() {
+		AffineTransform transform = new AffineTransform();
+		//Translation
+        transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(-256 + 256*(1/zoom)), -(-256 + 256*(1/zoom))));
+        //Scale
+        transform.concatenate(new AffineTransform(1/zoom, 0, 0, 1/zoom, 0, 0)); 
+		return transform;
+	}
+	
+	public AffineTransform worldToObject(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		//Rotation
+		transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), -Math.sin(shape.getRotation()), Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0.0, 0.0));
+		//Translation
+		transform.concatenate(new AffineTransform(1.0, 0.0, 0.0, 1.0, -shape.getCenter().getX(), -shape.getCenter().getY()));
+		return transform;
+	}
+	
+	public AffineTransform viewToObject(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		// World to object
+		transform.concatenate(worldToObject(shape));
+		// View to world
+        transform.concatenate(viewToWorld());
+		return transform;
+	}
+	
+	
+	
+	//-------------------------------BUTTON PRESSED-------------------------------------
+	
 	@Override
 	public void colorButtonHit(Color c) 
 	{
@@ -608,6 +680,19 @@ public class Controller implements CS355Controller {
 	}
 
 	@Override
+	public void doDeleteShape() {
+		if(curControllerMode == Mode.SELECT && curShapeIndex != -1)
+		{
+			Model.instance().deleteShape(curShapeIndex);
+			curShapeIndex = Model.get_instance().getCurShapeIndex();
+		}
+		GUIFunctions.refresh();
+	}
+	
+	
+	//-------------------------SAVE AND LOAD------------------------------
+	
+	@Override
 	public void saveDrawing(File file) 
 	{
 		Model.instance().save(file);
@@ -620,16 +705,13 @@ public class Controller implements CS355Controller {
 		Model.instance().open(file);
 		GUIFunctions.refresh();
 	}
-
-	@Override
-	public void doDeleteShape() {
-		if(curControllerMode == Mode.SELECT && curShapeIndex != -1)
-		{
-			Model.instance().deleteShape(curShapeIndex);
-			curShapeIndex = Model.get_instance().getCurShapeIndex();
-		}
-		GUIFunctions.refresh();
-	}
+	
+	
+	
+	
+	
+	
+	//---------------------------MOVE SHAPES-----------------------------
 	
 	@Override
 	public void doMoveForward() {
@@ -670,6 +752,7 @@ public class Controller implements CS355Controller {
 		}
 		GUIFunctions.refresh();
 	}
+
 	
 	// TODO LATER ON
 	@Override
