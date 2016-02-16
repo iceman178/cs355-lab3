@@ -547,7 +547,7 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 
-	public AffineTransform objectToView(Shape shape) 
+	public AffineTransform 	(Shape shape) 
 	{
 		AffineTransform transform = new AffineTransform();
 		// World to View
@@ -679,6 +679,7 @@ public class Controller implements CS355Controller {
 			zoom = zoom * ZOOMIN;
 			System.out.println("\t" + zoom);
 			GUIFunctions.setZoomText(zoom);
+			Model.instance().notifyObservers();
 			GUIFunctions.refresh();
 		}
 	}
@@ -693,6 +694,7 @@ public class Controller implements CS355Controller {
 			zoom = zoom * ZOOMOUT;
 			System.out.println("\t" + zoom);
 			GUIFunctions.setZoomText(zoom);
+			Model.instance().notifyObservers();
 			GUIFunctions.refresh();
 		}
 	}

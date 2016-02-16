@@ -162,15 +162,16 @@ public class Model extends CS355Drawing {
 				viewToWorld.transform(ptCopy, ptCopy);
 			}
 			
-			result = shapes.get(a).pointInShape(curClick, 0);
 			if (s.pointInShape(ptCopy, tolerance))
 			{
 				curShapeIndex = a;
 				selectedColor = s.getColor();
 				GUIFunctions.changeSelectedColor(selectedColor);
+				changeMade();
 				return curShapeIndex;
 			}
 		}
+		changeMade();
 		return curShapeIndex;
 	}
 	
@@ -246,6 +247,13 @@ public class Model extends CS355Drawing {
 		return false;
 	}
 
+	public void changeMade()
+	{
+		setChanged();
+		notifyObservers();
+	}
+	
+	
 	
 	//------------------GETTERS AND SETTERS---------------------------
 

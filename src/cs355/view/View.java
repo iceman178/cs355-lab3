@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import cs355.GUIFunctions;
+import cs355.controller.Controller;
 import cs355.model.drawing.*;
 
 public class View implements ViewRefresher {
@@ -29,20 +30,13 @@ public class View implements ViewRefresher {
 		int curShapeIndex = Model.instance().getCurShapeIndex();
 		
 		
-		
-		
-		
-		
 		for(int a = 0; a < shapes.size(); a++) 
 		{
 			Shape currentShape = shapes.get(a);
+			
 			g2d.setColor(currentShape.getColor());
 			
-			AffineTransform objToWorld = new AffineTransform();
-			
-			objToWorld.translate(currentShape.getCenter().getX(), currentShape.getCenter().getY());
-			objToWorld.rotate(currentShape.getRotation());
-			g2d.setTransform(objToWorld);
+			g2d.setTransform(Controller.instance().objectToView(currentShape));
 			
 			//Uses the factory to determine the current shape to set the fill
 			g2d.fill(shapeFactory(currentShape, g2d, false)); 
