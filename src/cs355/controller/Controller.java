@@ -3,9 +3,7 @@ package cs355.controller;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,6 +21,11 @@ public class Controller implements CS355Controller {
 	private Mode curControllerMode = Mode.NONE;
 	private double zoom = 1.0;
 	private static Controller _instance;
+	
+	public static final double ZOOMIN  = 2.0;
+	public static final double ZOOMOUT = 0.5;
+	public static final double ZOOMMIN = 0.25;
+	public static final double ZOOMMAX = 4.0;
 	
 	
 	public static Controller instance() 
@@ -42,6 +45,9 @@ public class Controller implements CS355Controller {
 		double avg = (num1 + num2 + num3) / 3;
 		return avg;
 	}
+	
+	
+	//----------------------------MOUSE EVENTS-------------------------------------
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
@@ -307,10 +313,9 @@ public class Controller implements CS355Controller {
 	public void rotateShape(int shapeIndex, MouseEvent arg0)
 	{
 		Shape shape = Model.instance().getShape(shapeIndex);
-		double deltaX = shape.getCenter().getX() - arg0.getX();
-		double deltaY = shape.getCenter().getY() - arg0.getY();
+		double deltaX = (shape.getCenter().getX() - arg0.getX())/Controller.instance().getZoom();
+		double deltaY = (shape.getCenter().getY() - arg0.getY())/Controller.instance().getZoom();
 		double angle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
-		
 		shape.setRotation(angle % (2*Math.PI));
 		GUIFunctions.refresh();
 	}
@@ -517,7 +522,13 @@ public class Controller implements CS355Controller {
 	
 	//-----------------------------TRANSFORM FUNCTIONS----------------------------------------TODO
 	
-	public AffineTransform objectToWorld(Shape shape) {
+	// AffineTransform af = new AffineTransform(v1,v2,v3,v4,v5,v6)
+	// |v1 v3 v5|
+	// |v2 v4 v6|
+	// |0  0  1 |
+	
+	public AffineTransform objectToWorld(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Translation
 		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, shape.getCenter().getX(), shape.getCenter().getY()));
@@ -526,7 +537,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform worldToView() {
+	public AffineTransform worldToView() 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Scale
         transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0));
@@ -535,7 +547,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 
-	public AffineTransform objectToView(Shape shape) {
+	public AffineTransform objectToView(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		// World to View
         transform.concatenate(worldToView());
@@ -544,7 +557,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform viewToWorld() {
+	public AffineTransform viewToWorld() 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Translation
         transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(-256 + 256*(1/zoom)), -(-256 + 256*(1/zoom))));
@@ -553,7 +567,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform worldToObject(Shape shape) {
+	public AffineTransform worldToObject(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Rotation
 		transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), -Math.sin(shape.getRotation()), Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0.0, 0.0));
@@ -562,7 +577,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform viewToObject(Shape shape) {
+	public AffineTransform viewToObject(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		// World to object
 		transform.concatenate(worldToObject(shape));
@@ -570,7 +586,6 @@ public class Controller implements CS355Controller {
         transform.concatenate(viewToWorld());
 		return transform;
 	}
-	
 	
 	
 	//-------------------------------BUTTON PRESSED-------------------------------------
@@ -651,34 +666,67 @@ public class Controller implements CS355Controller {
 		//System.out.println("Controller:selectButtonHit");
 	}
 
+	
+	//---------------------------------ZOOM FUNCTIONS------------------------------
+	
 	@Override
 	public void zoomInButtonHit() 
 	{
-		resetCurMode();
-		curControllerMode = Mode.ZOOM_IN;
-		System.out.println("Controller:zoomInButtonHit");
+		//curControllerMode = Mode.ZOOM_IN;
+		if(zoom < 4.0)
+		{
+			System.out.println("Zooming In");
+			zoom = zoom * ZOOMIN;
+			System.out.println("\t" + zoom);
+			GUIFunctions.setZoomText(zoom);
+			GUIFunctions.refresh();
+		}
 	}
 
 	@Override
 	public void zoomOutButtonHit() 
 	{
-		resetCurMode();
-		curControllerMode = Mode.ZOOM_OUT;
-		System.out.println("Controller:zoomOutButtonHit");
+		//curControllerMode = Mode.ZOOM_OUT;
+		if(zoom > 0.25)
+		{
+			System.out.println("Zooming Out");
+			zoom = zoom * ZOOMOUT;
+			System.out.println("\t" + zoom);
+			GUIFunctions.setZoomText(zoom);
+			GUIFunctions.refresh();
+		}
 	}
 
+	public void setZoom(Double value)
+	{
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	//---------------------------SCROLL BAR-----------------------------------
+	
 	@Override
 	public void hScrollbarChanged(int value) 
 	{
 		System.out.println("Controller:hScrollbarChanged  Value=" + value);
+		
 	}
 
 	@Override
 	public void vScrollbarChanged(int value) 
 	{
 		System.out.println("Controller:vScrollbarChanged  Value=" + value);
+		
 	}
 
+	
+	//---------------------------DELETE SHAPE-----------------------------
+	
 	@Override
 	public void doDeleteShape() {
 		if(curControllerMode == Mode.SELECT && curShapeIndex != -1)
@@ -706,11 +754,7 @@ public class Controller implements CS355Controller {
 		GUIFunctions.refresh();
 	}
 	
-	
-	
-	
-	
-	
+
 	//---------------------------MOVE SHAPES-----------------------------
 	
 	@Override
@@ -805,8 +849,26 @@ public class Controller implements CS355Controller {
 	
 	//------------------------GETTERS AND SETTERS---------------------------
 	
+	
+	
 	public boolean isRotating() {
 		return rotating;
+	}
+
+	public double getZoom() {
+		return zoom;
+	}
+
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
+	}
+
+	public static Controller get_instance() {
+		return _instance;
+	}
+
+	public static void set_instance(Controller _instance) {
+		Controller._instance = _instance;
 	}
 
 	public void setRotating(boolean rotating) {

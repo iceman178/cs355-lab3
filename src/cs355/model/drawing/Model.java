@@ -174,7 +174,7 @@ public class Model extends CS355Drawing {
 		return curShapeIndex;
 	}
 	
-	public boolean mousePressedInRotHandle (Point2D.Double pt, double tolerance)
+	public boolean mousePressedInRotHandle(Point2D.Double pt, double tolerance)
 	{
 		if(curShapeIndex == -1) 
 		{

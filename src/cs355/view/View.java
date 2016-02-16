@@ -28,6 +28,11 @@ public class View implements ViewRefresher {
 		
 		int curShapeIndex = Model.instance().getCurShapeIndex();
 		
+		
+		
+		
+		
+		
 		for(int a = 0; a < shapes.size(); a++) 
 		{
 			Shape currentShape = shapes.get(a);
