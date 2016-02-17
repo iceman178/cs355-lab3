@@ -15,7 +15,7 @@ public class Model extends CS355Drawing {
 	//Use a singleton so that the model can be accessed by the view when repainting
 	private static Model _instance;
 	
-	private Shape.type currentMode;
+	private Shape.type currentShape;
 	private Color selectedColor;
 	private ArrayList<Shape> shapes;
 	private int curShapeIndex;
@@ -34,9 +34,17 @@ public class Model extends CS355Drawing {
 	{
 		selectedColor = Color.WHITE;
 		shapes = new ArrayList<Shape>();
-		currentMode = Shape.type.NONE;
+		currentShape = Shape.type.NONE;
 		curShapeIndex = -1;
 	}
+	
+	public void notifyObservers() 
+	{
+		super.notifyObservers();
+	}
+	
+	
+	//----------------------------SHAPE FUNCTIONS---------------------------
 	
 	public Shape getLastShape() 
 	{
@@ -65,6 +73,9 @@ public class Model extends CS355Drawing {
 	{
 		return shapes.get(index);
 	}
+	
+	
+	//------------------------ADD AND DELETE-----------------------------
 
 	@Override
 	public int addShape(Shape s) 
@@ -84,7 +95,7 @@ public class Model extends CS355Drawing {
 		curShapeIndex = -1;
 	}
 	
-	// -----------------------Moving---------------------------
+	//------------------------------MOVING-------------------------------
 	
 	@Override
 	public void moveToFront(int index) {
@@ -149,21 +160,17 @@ public class Model extends CS355Drawing {
 			Shape s = shapes.get(a);
 			Point2D.Double ptCopy = new Point2D.Double(curClick.getX(), curClick.getY());
 			
-			if (s.getShapeType() != Shape.type.LINE)
-			{
-				// Changes the coordinates from view->world->object
+			if(s.getShapeType() != Shape.type.LINE) {
+				// changes the coordinates from view->world->object
 				AffineTransform viewToObject = Controller.instance().viewToObject(s);
 				viewToObject.transform(ptCopy, ptCopy);
 			}
-			else
-			{
-				// Changes the coordinates from view->world
+			else {
+				// changes the coordinates from view->world
 				AffineTransform viewToWorld = Controller.instance().viewToWorld();
 				viewToWorld.transform(ptCopy, ptCopy);
 			}
-			
-			if (s.pointInShape(ptCopy, tolerance))
-			{
+			if(s.pointInShape(ptCopy, tolerance)) {
 				curShapeIndex = a;
 				selectedColor = s.getColor();
 				GUIFunctions.changeSelectedColor(selectedColor);
@@ -171,6 +178,7 @@ public class Model extends CS355Drawing {
 				return curShapeIndex;
 			}
 		}
+		curShapeIndex = -1;
 		changeMade();
 		return curShapeIndex;
 	}
@@ -202,7 +210,7 @@ public class Model extends CS355Drawing {
 			default:
 				break;
 		}
-		if(height != -1)
+		if(height!=-1)
 		{
 			Point2D.Double ptCopy = new Point2D.Double(pt.getX(), pt.getY());
 			// changes the coordinates from view->world->object
@@ -253,8 +261,6 @@ public class Model extends CS355Drawing {
 		notifyObservers();
 	}
 	
-	
-	
 	//------------------GETTERS AND SETTERS---------------------------
 
 	@Override
@@ -281,12 +287,12 @@ public class Model extends CS355Drawing {
 		Model._instance = _instance;
 	}
 
-	public Shape.type getCurrentMode() {
-		return currentMode;
+	public Shape.type getCurrentShape() {
+		return currentShape;
 	}
 
-	public void setCurrentMode(Shape.type currentMode) {
-		this.currentMode = currentMode;
+	public void setCurrentShape(Shape.type currentShape) {
+		this.currentShape = currentShape;
 	}
 
 	public Color getSelectedColor() {

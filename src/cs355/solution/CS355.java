@@ -13,8 +13,12 @@ import cs355.view.View;
  * Make you add code below to initialize your model,
  * view, and controller and give them to the app.
  */
-public class CS355 {
-
+public class CS355 
+{
+	public static final int SCREENSIZE = 2048;
+	public static final int SCROLLSTART = 512;
+	public static final int STARTINGPOSITION = 1024 - SCROLLSTART/2;
+		
 	/**
 	 * This is where it starts.
 	 * @param args = the command line arguments
@@ -22,7 +26,7 @@ public class CS355 {
 	public static void main(String[] args) 
 	{
 		//System.out.println("Starting Program...");
-		Controller the_controller = new Controller();
+		Controller the_controller = Controller.instance();
 		View the_view = new View();
 		
 		Model.instance().addObserver(the_view);

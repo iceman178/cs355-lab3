@@ -29,7 +29,6 @@ public class View implements ViewRefresher {
 		
 		int curShapeIndex = Model.instance().getCurShapeIndex();
 		
-		
 		for(int a = 0; a < shapes.size(); a++) 
 		{
 			Shape currentShape = shapes.get(a);
@@ -42,6 +41,7 @@ public class View implements ViewRefresher {
 			g2d.fill(shapeFactory(currentShape, g2d, false)); 
 			//Uses the factory to determine the current shape to draw the image
 			g2d.draw(shapeFactory(currentShape, g2d, curShapeIndex == a)); 
+			g2d.setColor(currentShape.getColor());
 		}
 	}
 	
