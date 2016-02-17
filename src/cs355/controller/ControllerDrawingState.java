@@ -171,41 +171,56 @@ public class ControllerDrawingState implements IControllerState
 	private void updateCurrentCircle(Shape currentShape, Point2D.Double pt) 
 	{
 		Circle circle = (Circle) currentShape;
-		Point2D.Double curMousePos = new Point2D.Double(pt.getX(), pt.getY());
-
-		double side_length = Math.min(Math.abs(circle.getOrigin().getX() - curMousePos.getX()), 
-									  Math.abs(circle.getOrigin().getY() - curMousePos.getY()));
-		circle.setRadius(side_length / 2);
 		
-		// Left side of origin point
-		if (curMousePos.getX() < circle.getOrigin().getX())
+		//if the cursor is moving below the upper left corner
+		if(pt.getY() > mouseDragStart.y)
 		{
-			double x = circle.getOrigin().getX() - side_length/2;
-			// Above origin point
-			if (curMousePos.getY() < circle.getOrigin().getY())
+			//if the cursor is moving to the bottom right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double y = circle.getOrigin().getY() - side_length/2;
-				circle.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = pt.getY() - mouseDragStart.y;
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				circle.setCenter(new Point2D.Double(mouseDragStart.x + newcorner/2, mouseDragStart.y + newcorner/2));
+				circle.setRadius(newcorner / 2);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the bottom left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double y = circle.getOrigin().getY() + side_length/2;
-				circle.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = pt.getY() - mouseDragStart.y;
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				circle.setCenter(new Point2D.Double(mouseDragStart.x - newcorner/2, mouseDragStart.y + newcorner/2));
+				circle.setRadius(newcorner / 2);
 			}
 		}
-		else // Right side of origin point
+
+		//if the cursor is moving above the upper left corner
+		if(pt.getY() < mouseDragStart.y)
 		{
-			double x = circle.getOrigin().getX() + side_length/2;
-			// Above origin point
-			if (curMousePos.getY() < circle.getOrigin().getY())
+			//if the cursor is moving to the upper right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double y = circle.getOrigin().getY() - side_length/2;
-				circle.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = mouseDragStart.y - pt.getY();
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				circle.setCenter(new Point2D.Double(mouseDragStart.x + newcorner/2, mouseDragStart.y  - newcorner/2));
+				circle.setRadius(newcorner / 2);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the upper left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double y = circle.getOrigin().getY() + side_length/2;
-				circle.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = mouseDragStart.y - pt.getY();
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				circle.setCenter(new Point2D.Double(mouseDragStart.x - newcorner/2, mouseDragStart.y - newcorner/2));
+				circle.setRadius(newcorner / 2);
 			}
 		}
 		
@@ -215,43 +230,56 @@ public class ControllerDrawingState implements IControllerState
 	private void updateCurrentEllipse(Shape currentShape, Point2D.Double pt) 
 	{
 		Ellipse ellipse = (Ellipse) currentShape;
-		Point2D.Double curMousePos = new Point2D.Double(pt.getX(), pt.getY());
 		
-		double width = Math.abs(ellipse.getOrigin().getX() - curMousePos.getX());
-		double height = Math.abs(ellipse.getOrigin().getY() - curMousePos.getY());
-		
-		ellipse.setWidth(width);
-		ellipse.setHeight(height);
-		
-		// Left side of origin point
-		if (curMousePos.getX() < ellipse.getOrigin().getX())
+		//if the cursor is moving below the upper left corner
+		if(pt.getY() > mouseDragStart.y)
 		{
-			double x = ellipse.getOrigin().getX() - width/2;
-			// Above origin point
-			if (curMousePos.getY() < ellipse.getOrigin().getY())
+			//if the cursor is moving to the bottom right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double y = ellipse.getOrigin().getY() - height/2;
-				ellipse.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = pt.getY() - mouseDragStart.y;
+				
+				ellipse.setCenter(new Point2D.Double(mouseDragStart.x + lengthX/2, mouseDragStart.y + lengthY/2));
+				ellipse.setWidth(lengthX);
+				ellipse.setHeight(lengthY);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the bottom left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double y = ellipse.getOrigin().getY() + height/2;
-				ellipse.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = pt.getY() - mouseDragStart.y;
+				
+				ellipse.setCenter(new Point2D.Double(mouseDragStart.x - lengthX/2, mouseDragStart.y + lengthY/2));
+				ellipse.setWidth(lengthX);
+				ellipse.setHeight(lengthY);
 			}
 		}
-		else // Right side of origin point
+
+		//if the cursor is moving above the upper left corner
+		if(pt.getY() < mouseDragStart.y)
 		{
-			double x = ellipse.getOrigin().getX() + width/2;
-			// Above origin point
-			if (curMousePos.getY() < ellipse.getOrigin().getY())
+			//if the cursor is moving to the upper right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double y = ellipse.getOrigin().getY() - height/2;
-				ellipse.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = mouseDragStart.y - pt.getY();
+				
+				ellipse.setCenter(new Point2D.Double(mouseDragStart.x + lengthX/2, mouseDragStart.y  - lengthY/2));
+				ellipse.setWidth(lengthX);
+				ellipse.setHeight(lengthY);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the upper left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double y = ellipse.getOrigin().getY() + height/2;
-				ellipse.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = mouseDragStart.y - pt.getY();
+				
+				ellipse.setCenter(new Point2D.Double(mouseDragStart.x - lengthX/2, mouseDragStart.y - lengthY/2));
+				ellipse.setWidth(lengthX);
+				ellipse.setHeight(lengthY);
 			}
 		}
 		
@@ -261,89 +289,113 @@ public class ControllerDrawingState implements IControllerState
 	private void updateCurrentRectangle(Shape currentShape, Point2D.Double pt) 
 	{
 		Rectangle rectangle = (Rectangle) currentShape;
-		Point2D.Double curMousePos = new Point2D.Double(pt.getX(), pt.getY());
 		
-		double width = Math.abs(rectangle.getOrigin().getX() - curMousePos.getX());
-		double height = Math.abs(rectangle.getOrigin().getY() - curMousePos.getY());
-		
-		rectangle.setWidth(width);
-		rectangle.setHeight(height);
-
-		// Left side of origin point
-		if (curMousePos.getX() < rectangle.getOrigin().getX())
+		if(pt.getY() > mouseDragStart.y)
 		{
-			double x = rectangle.getOrigin().getX() - width/2;
-			// Above origin point
-			if (curMousePos.getY() < rectangle.getOrigin().getY())
+			//if the cursor is moving to the bottom right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double y = rectangle.getOrigin().getY() - height/2;
-				rectangle.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = pt.getY() - mouseDragStart.y;
+				
+				rectangle.setCenter(new Point2D.Double(mouseDragStart.x + lengthX/2, mouseDragStart.y + lengthY/2));
+				rectangle.setHeight(lengthY);
+				rectangle.setWidth(lengthX);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the bottom left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double y = rectangle.getOrigin().getY() + height/2;
-				rectangle.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = pt.getY() - mouseDragStart.y;
+				
+				rectangle.setCenter(new Point2D.Double(mouseDragStart.x - lengthX/2, mouseDragStart.y + lengthY/2));
+				rectangle.setHeight(lengthY);
+				rectangle.setWidth(lengthX);
 			}
 		}
-		else // Right side of origin point
+		else if(pt.getY() < mouseDragStart.y)
 		{
-			double x = rectangle.getOrigin().getX() + width/2;
-			// Above origin point
-			if (curMousePos.getY() < rectangle.getOrigin().getY())
+			//if the cursor is moving to the upper right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double y = rectangle.getOrigin().getY() - height/2;
-				rectangle.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = mouseDragStart.y - pt.getY();
+				
+				rectangle.setCenter(new Point2D.Double(mouseDragStart.x + lengthX/2, mouseDragStart.y  - lengthY/2));
+				rectangle.setHeight(lengthY);
+				rectangle.setWidth(lengthX);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the upper left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double y = rectangle.getOrigin().getY() + height/2;
-				rectangle.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = mouseDragStart.y - pt.getY();
+				
+				rectangle.setCenter(new Point2D.Double(mouseDragStart.x - lengthX/2, mouseDragStart.y - lengthY/2));
+				rectangle.setHeight(lengthY);
+				rectangle.setWidth(lengthX);
 			}
 		}
-
+		
 		Model.instance().updateLastShape(rectangle);		
 	}
 
 	private void updateCurrentSquare(Shape currentShape, Point2D.Double pt) 
 	{
 		Square square = (Square) currentShape;
-		Point2D.Double curMousePos = new Point2D.Double(pt.getX(), pt.getY());
-
-		double side_length = Math.min(Math.abs(square.getOrigin().getX() - curMousePos.getX()), 
-									  Math.abs(square.getOrigin().getY() - curMousePos.getY()));
-		square.setSize(side_length);
-
-		// Left side of origin point
-		if (curMousePos.getX() < square.getOrigin().getX())
+		
+		//if the cursor is moving below the upper left corner
+		if(pt.getY() > mouseDragStart.y)
 		{
-			// Above origin point
-			if (curMousePos.getY() < square.getOrigin().getY())
+			//if the cursor is moving to the bottom right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double x = square.getOrigin().getX() - side_length/2;
-				double y = square.getOrigin().getY() - side_length/2;
-				square.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = pt.getY() - mouseDragStart.y;
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				square.setCenter(new Point2D.Double(mouseDragStart.x + newcorner/2, mouseDragStart.y + newcorner/2));
+				square.setSize(newcorner);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the bottom left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double x = square.getOrigin().getX() - side_length/2;
-				double y = square.getOrigin().getY() + side_length/2;
-				square.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = pt.getY() - mouseDragStart.y;
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				square.setCenter(new Point2D.Double(mouseDragStart.x - newcorner/2, mouseDragStart.y + newcorner/2));
+				square.setSize(newcorner);
 			}
 		}
-		else // Right side of origin point
+
+		//if the cursor is moving above the upper left corner
+		if(pt.getY() < mouseDragStart.y)
 		{
-			// Above origin point
-			if (curMousePos.getY() < square.getOrigin().getY())
+			//if the cursor is moving to the upper right quad
+			if(pt.getX() > mouseDragStart.x)
 			{
-				double x = square.getOrigin().getX() + side_length/2;
-				double y = square.getOrigin().getY() - side_length/2;
-				square.setCenter(new Point2D.Double(x, y));
+				double lengthX = pt.getX() - mouseDragStart.x;
+				double lengthY = mouseDragStart.y - pt.getY();
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				//change to set center of some sort 
+				square.setCenter(new Point2D.Double(mouseDragStart.x + newcorner/2, mouseDragStart.y  - newcorner/2));
+				square.setSize(newcorner);
 			}
-			else // Below origin point
+
+			//if the cursor is moving to the upper left quad
+			if(pt.getX() < mouseDragStart.x)
 			{
-				double x = square.getOrigin().getX() + side_length/2;
-				double y = square.getOrigin().getY() + side_length/2;
-				square.setCenter(new Point2D.Double(x, y));
+				double lengthX = mouseDragStart.x - pt.getX();
+				double lengthY = mouseDragStart.y - pt.getY();
+				double newcorner = Math.min(lengthX, lengthY);
+				
+				square.setCenter(new Point2D.Double(mouseDragStart.x - newcorner/2, mouseDragStart.y - newcorner/2));
+				square.setSize(newcorner);
 			}
 		}
 		
