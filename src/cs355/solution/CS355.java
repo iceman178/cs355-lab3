@@ -25,7 +25,6 @@ public class CS355
 	 */
 	public static void main(String[] args) 
 	{
-		//System.out.println("Starting Program...");
 		Controller the_controller = Controller.instance();
 		View the_view = new View();
 		
@@ -34,6 +33,16 @@ public class CS355
 		
 		GUIFunctions.createCS355Frame(the_controller, the_view);
 		GUIFunctions.changeSelectedColor(Color.GREEN);
+		
+		GUIFunctions.setHScrollBarMax(SCREENSIZE);
+		GUIFunctions.setVScrollBarMax(SCREENSIZE);
+		
+		GUIFunctions.setHScrollBarPosit(STARTINGPOSITION);
+		GUIFunctions.setVScrollBarPosit(STARTINGPOSITION);
+		
+		GUIFunctions.setHScrollBarKnob(SCROLLSTART);
+		GUIFunctions.setVScrollBarKnob(SCROLLSTART);
+		
 		GUIFunctions.refresh();	
 		
 	}

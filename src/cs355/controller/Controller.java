@@ -31,8 +31,9 @@ public class Controller implements CS355Controller {
 	
 	public static Controller instance() 
 	{
-		if (_instance == null) 
+		if (_instance == null) {
 			_instance = new Controller();
+		}
 		return _instance;
 	}
 
@@ -156,14 +157,19 @@ public class Controller implements CS355Controller {
 		this.setZoom(ZOOMOUT);
 	}
 
-	public void setZoom(Double value)
+	public void setZoom(Double zoomAdjustment)
 	{
 		// find screen width before zoom changes
 		int prevWidth = (int) (CS355.SCROLLSTART/zoom);
 		
-		zoom *= value;
-		if(zoom < ZOOMMIN) zoom = ZOOMMIN;
-		if(zoom > ZOOMMAX) zoom = ZOOMMAX;
+		zoom = zoom * zoomAdjustment;
+		// Checks for max and min
+		if(zoom < ZOOMMIN) {
+			zoom = ZOOMMIN;
+		}
+		if(zoom > ZOOMMAX) {
+			zoom = ZOOMMAX;
+		}
 		
 		scrollerSize = (CS355.SCROLLSTART/zoom);
 
@@ -176,7 +182,9 @@ public class Controller implements CS355Controller {
 		
 		updating = true;
 		
-		if(prevWidth == CS355.SCREENSIZE) {
+		// Change scroll bar sizes and positions
+		if(prevWidth == CS355.SCREENSIZE) 
+		{
 			GUIFunctions.setHScrollBarKnob((int) scrollerSize);
 			GUIFunctions.setVScrollBarKnob((int) scrollerSize);
 		}
@@ -187,11 +195,11 @@ public class Controller implements CS355Controller {
 
 
 		GUIFunctions.setZoomText(zoom);
-		System.out.println("Zoom=" + zoom);		
-		
+
 		Model.instance().changeMade();
-		
+		GUIFunctions.refresh();
 		this.updating = false;
+		
 	}
 	
 	
@@ -200,15 +208,23 @@ public class Controller implements CS355Controller {
 	@Override
 	public void hScrollbarChanged(int value) 
 	{
-		System.out.println("Controller:hScrollbarChanged  Value=" + value);
-		
+		System.out.println("H Bar Value=" + value);
+		viewCenter.x = value + scrollerSize / 2.0;
+		if(!updating)
+		{
+			Model.instance().changeMade();
+		}
 	}
 
 	@Override
 	public void vScrollbarChanged(int value) 
 	{
-		System.out.println("Controller:vScrollbarChanged  Value=" + value);
-		
+		System.out.println("V Bar Value=" + value);
+		viewCenter.y = value + scrollerSize / 2.0;
+		if(!updating)
+		{
+			Model.instance().changeMade();
+		}
 	}
 
 
@@ -448,10 +464,6 @@ public class Controller implements CS355Controller {
 
 	public double getZoom() {
 		return zoom;
-	}
-
-	public void setZoom(double zoom) {
-		this.zoom = zoom;
 	}
 
 	public static Controller get_instance() {

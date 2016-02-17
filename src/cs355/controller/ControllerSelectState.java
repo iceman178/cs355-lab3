@@ -5,10 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 import cs355.GUIFunctions;
-import cs355.model.drawing.Line;
-import cs355.model.drawing.Model;
-import cs355.model.drawing.Shape;
-import cs355.model.drawing.Triangle;
+import cs355.model.drawing.*;
 
 public class ControllerSelectState implements IControllerState
 {
@@ -26,19 +23,18 @@ public class ControllerSelectState implements IControllerState
 		this.mouseDragStart = null;
 	}
 	
-	// DONE
 	@Override
 	public void mousePressed(MouseEvent arg0) 
 	{
 		boolean result = false;
-		result = Model.instance().mousePressedInRotHandle(new Point2D.Double(arg0.getX(), arg0.getY()), 5);
+		result = mousePressedInRotHandle(new Point2D.Double(arg0.getX(), arg0.getY()), 5);
 		if (result)
 		{
 			rotating = true;
 		}
 		else
 		{
-			currentShapeIndex = Model.instance().checkIfSelectedShape(new Point2D.Double(arg0.getX(), arg0.getY()));
+			this.currentShapeIndex = Model.instance().checkIfSelectedShape(new Point2D.Double(arg0.getX(), arg0.getY()));
 			if (currentShapeIndex != -1)
 			{
 				mouseDragStart = new Point2D.Double(arg0.getX(), arg0.getY());
@@ -48,7 +44,6 @@ public class ControllerSelectState implements IControllerState
 		}
 	}
 
-	// DONE
 	@Override
 	public void mouseReleased(MouseEvent arg0) 
 	{
@@ -59,7 +54,6 @@ public class ControllerSelectState implements IControllerState
 		}
 	}
 
-	// DONE
 	@Override
 	public void mouseDragged(MouseEvent arg0) 
 	{
@@ -71,7 +65,7 @@ public class ControllerSelectState implements IControllerState
 			
 			if(rotating) 
 			{
-				rotateShape(currentShapeIndex, arg0);
+				rotateShape(currentShapeIndex, movingPoint);
 			}
 			else 
 			{
@@ -80,16 +74,16 @@ public class ControllerSelectState implements IControllerState
 				switch(shapeType) 
 				{
 				case LINE:
-					this.handleLineTransformation(arg0);
+					this.handleLineTransformation(movingPoint);
 					break;
 				case SQUARE:
 				case RECTANGLE:
 				case CIRCLE:
 				case ELLIPSE:
-					this.handleShapeTransformation(arg0);
+					this.handleShapeTransformation(movingPoint);
 					break;
 				case TRIANGLE:
-					this.handleTriangleTransformation(arg0);
+					this.handleTriangleTransformation(movingPoint);
 					break;
 				case NONE:
 					break;
@@ -116,22 +110,22 @@ public class ControllerSelectState implements IControllerState
 		return avg;
 	}
 	
-	public void handleLineTransformation(MouseEvent arg0) 
+	public void handleLineTransformation(Point2D.Double pt) 
 	{
 		Line line = (Line) Model.instance().getShape(currentShapeIndex);
 		
-		if(line.pointNearCenter(new Point2D.Double(arg0.getX(), arg0.getY()), 10)) 
+		if(line.pointNearCenter(new Point2D.Double(pt.getX(), pt.getY()), 10)) 
 		{
-			line.setCenter(new Point2D.Double(arg0.getX(), arg0.getY()));
+			line.setCenter(new Point2D.Double(pt.getX(), pt.getY()));
 		}
-		else if(line.pointNearEnd(new Point2D.Double(arg0.getX(), arg0.getY()), 10)) 
+		else if(line.pointNearEnd(new Point2D.Double(pt.getX(), pt.getY()), 10)) 
 		{
-			line.setEnd(new Point2D.Double(arg0.getX(), arg0.getY()));
+			line.setEnd(new Point2D.Double(pt.getX(), pt.getY()));
 		}
 		else 
 		{
-			double changeX = arg0.getX() - mouseDragStart.getX();
-			double changeY = arg0.getY() - mouseDragStart.getY();
+			double changeX = pt.getX() - mouseDragStart.getX();
+			double changeY = pt.getY() - mouseDragStart.getY();
 			
 			Point2D.Double center = line.getCenter();
 			Point2D.Double end = line.getEnd();
@@ -151,20 +145,20 @@ public class ControllerSelectState implements IControllerState
 		}
 	}
 
-	public void handleShapeTransformation(MouseEvent arg0) 
+	public void handleShapeTransformation(Point2D.Double pt) 
 	{
 		Shape shape = Model.instance().getShape(currentShapeIndex);
-		double changeX = arg0.getX() - mouseDragStart.getX();
-		double changeY = arg0.getY() - mouseDragStart.getY();
-		shape.setCenter(new Point2D.Double(mouseDragStart.x + changeX, mouseDragStart.y + changeY));
+		double changeX = pt.getX() - mouseDragStart.getX();
+		double changeY = pt.getY() - mouseDragStart.getY();
+		shape.setCenter(new Point2D.Double((mouseDragStart.x + changeX), (mouseDragStart.y + changeY)));
 		Model.instance().updateShapeByIndex(currentShapeIndex, shape);
 	}
 	 
-	public void handleTriangleTransformation(MouseEvent arg0) 
+	public void handleTriangleTransformation(Point2D.Double pt) 
 	{
 		Triangle triangle = (Triangle) Model.instance().getShape(currentShapeIndex);
-		double changeX = arg0.getX() - mouseDragStart.getX();
-		double changeY = arg0.getY() - mouseDragStart.getY();
+		double changeX = pt.getX() - mouseDragStart.getX();
+		double changeY = pt.getY() - mouseDragStart.getY();
 		
 		double aXdelta = triangle.getA().x - triangle.getCenter().x;
 		double bXdelta = triangle.getB().x - triangle.getCenter().x;
@@ -190,14 +184,86 @@ public class ControllerSelectState implements IControllerState
 		Model.instance().updateShapeByIndex(currentShapeIndex, triangle);
 	}
 
-	public void rotateShape(int shapeIndex, MouseEvent arg0)
+	public void rotateShape(int shapeIndex, Point2D.Double pt)
 	{
 		Shape shape = Model.instance().getShape(shapeIndex);
-		double deltaX = (shape.getCenter().getX() - arg0.getX())/Controller.instance().getZoom();
-		double deltaY = (shape.getCenter().getY() - arg0.getY())/Controller.instance().getZoom();
+		double deltaX = (shape.getCenter().getX() - pt.getX())/Controller.instance().getZoom();
+		double deltaY = (shape.getCenter().getY() - pt.getY())/Controller.instance().getZoom();
 		double angle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
 		shape.setRotation(angle % (2*Math.PI));
 		GUIFunctions.refresh();
+	}
+	
+	public boolean mousePressedInRotHandle(Point2D.Double pt, double tolerance)
+	{
+		if(currentShapeIndex == -1) 
+		{
+			return false;
+		}
+		
+		// Gets currently selected shape
+		Shape shape = Model.instance().getShape(currentShapeIndex);
+		double height = -1;
+		switch(shape.getShapeType())
+		{
+			case ELLIPSE:
+				height = ((Ellipse)shape).getHeight();
+				break;
+			case RECTANGLE:
+				height = ((Rectangle)shape).getHeight();
+				break;
+			case CIRCLE:
+				height = 2*((Circle)shape).getRadius();
+				break;
+			case SQUARE:
+				height = ((Square)shape).getSize();
+				break;
+			default:
+				break;
+		}
+		if(height!=-1)
+		{
+			Point2D.Double ptCopy = new Point2D.Double(pt.getX(), pt.getY());
+			// changes the coordinates from view->world->object
+			AffineTransform viewToObj = Controller.instance().viewToObject(shape);
+			viewToObj.transform(ptCopy, ptCopy);
+			double yDiff = ptCopy.getY()+((height/2) + 9);
+			
+			double distance = Math.sqrt(Math.pow(ptCopy.getX(), 2) + Math.pow(yDiff, 2));
+			return (6>=distance);
+		}
+		if(shape.getShapeType().equals(Shape.type.TRIANGLE))
+		{
+			Point2D.Double ptCopy = new Point2D.Double(pt.getX(), pt.getY());
+			// changes the coordinates from view->world->object
+			AffineTransform viewToObj = Controller.instance().viewToObject(shape);
+			viewToObj.transform(ptCopy, ptCopy); //transform pt to object coordinates
+			
+			Triangle triangle = (Triangle)shape;
+			double ax = triangle.getA().getX()-triangle.getCenter().getX();
+			double bx = triangle.getB().getX()-triangle.getCenter().getX();
+			double cx = triangle.getC().getX()-triangle.getCenter().getX();
+			
+			double ay = triangle.getA().getY()-triangle.getCenter().getY();
+			double by = triangle.getB().getY()-triangle.getCenter().getY();
+			double cy = triangle.getC().getY()-triangle.getCenter().getY();
+			
+			double distance = 7;
+			if(ay <= by && ay <= cy)
+			{
+				distance = Math.sqrt(Math.pow(ax-ptCopy.getX(), 2) + Math.pow(ay-ptCopy.getY()-9, 2));
+			}
+			else if(by <= ay && by <= cy)
+			{
+				distance = Math.sqrt(Math.pow(bx-ptCopy.getX(), 2) + Math.pow(by-ptCopy.getY()-9, 2));
+			}
+			else if(cy <= by && cy <= ay)
+			{
+				distance = Math.sqrt(Math.pow(cx-ptCopy.getX(), 2) + Math.pow(cy-ptCopy.getY()-9, 2));
+			}
+			return (6>=distance); 
+		}
+		return false;
 	}
 	
 	
