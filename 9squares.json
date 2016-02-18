@@ -1,0 +1,200 @@
+[
+  {
+    "size": 0.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 169.0,
+      "y": 213.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 169.0,
+      "y": 213.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 114.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 1034.0,
+      "y": 1051.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 209.0,
+      "y": 202.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 44.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 24.0,
+      "y": 23.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 2.0,
+      "y": 1.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 60.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 2015.0,
+      "y": 32.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 509.0,
+      "y": 2.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 65.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 2012.5,
+      "y": 2012.5
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 509.0,
+      "y": 509.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 52.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 29.0,
+      "y": 2017.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 3.0,
+      "y": 507.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 120.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 60.0,
+      "y": 1052.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 0.0,
+      "y": 248.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 116.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 1982.0,
+      "y": 1030.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 510.0,
+      "y": 243.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 8.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 1132.0,
+      "y": 4.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 284.0,
+      "y": 0.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 148.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 1050.0,
+      "y": 74.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 244.0,
+      "y": 0.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  },
+  {
+    "size": 120.0,
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
+    "center": {
+      "x": 1044.0,
+      "y": 1972.0
+    },
+    "rotation": 0.0,
+    "shapeType": "SQUARE",
+    "origin": {
+      "x": 246.0,
+      "y": 508.0
+    },
+    "SHAPE_TYPE": "cs355.model.drawing.Square"
+  }
+]

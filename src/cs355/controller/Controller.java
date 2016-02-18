@@ -174,25 +174,24 @@ public class Controller implements CS355Controller {
 		scrollerSize = (CS355.SCROLLSTART/zoom);
 
 		//calculate the new top left of the view
-		Point2D.Double newTopLeft = new Point2D.Double(viewCenter.x - scrollerSize/2, viewCenter.y - scrollerSize/2);
+		Point2D.Double newTopLeft = new Point2D.Double(this.viewCenter.x - this.scrollerSize/2, this.viewCenter.y - this.scrollerSize/2);
 		if(newTopLeft.x < 0) newTopLeft.x = 0;
 		if(newTopLeft.y < 0) newTopLeft.y = 0;
-		if(newTopLeft.x + scrollerSize > CS355.SCREENSIZE) newTopLeft.x = CS355.SCREENSIZE - scrollerSize;
-		if(newTopLeft.y + scrollerSize > CS355.SCREENSIZE) newTopLeft.y = CS355.SCREENSIZE - scrollerSize;
+		if(newTopLeft.x + this.scrollerSize > CS355.SCREENSIZE) newTopLeft.x = CS355.SCREENSIZE - this.scrollerSize;
+		if(newTopLeft.y + this.scrollerSize > CS355.SCREENSIZE) newTopLeft.y = CS355.SCREENSIZE - this.scrollerSize;
 		
-		updating = true;
+		this.updating = true;
 		
 		// Change scroll bar sizes and positions
 		if(prevWidth == CS355.SCREENSIZE) 
 		{
-			GUIFunctions.setHScrollBarKnob((int) scrollerSize);
-			GUIFunctions.setVScrollBarKnob((int) scrollerSize);
+			GUIFunctions.setHScrollBarKnob((int) this.scrollerSize);
+			GUIFunctions.setVScrollBarKnob((int) this.scrollerSize);
 		}
 		GUIFunctions.setHScrollBarPosit((int) newTopLeft.x);
 		GUIFunctions.setVScrollBarPosit((int) newTopLeft.y);
-		GUIFunctions.setHScrollBarKnob((int) scrollerSize);
-		GUIFunctions.setVScrollBarKnob((int) scrollerSize);
-
+		GUIFunctions.setHScrollBarKnob((int) this.scrollerSize);
+		GUIFunctions.setVScrollBarKnob((int) this.scrollerSize);
 
 		GUIFunctions.setZoomText(zoom);
 
@@ -202,28 +201,28 @@ public class Controller implements CS355Controller {
 		
 	}
 	
-	
+		
 	//---------------------------SCROLL BAR-----------------------------------
 	
 	@Override
 	public void hScrollbarChanged(int value) 
 	{
-		System.out.println("H Bar Value=" + value);
-		viewCenter.x = value + scrollerSize / 2.0;
-		if(!updating)
+		this.viewCenter.x = value + this.scrollerSize / 2.0;
+		if(!this.updating)
 		{
 			Model.instance().changeMade();
+			GUIFunctions.refresh();
 		}
 	}
 
 	@Override
 	public void vScrollbarChanged(int value) 
 	{
-		System.out.println("V Bar Value=" + value);
-		viewCenter.y = value + scrollerSize / 2.0;
-		if(!updating)
+		this.viewCenter.y = value + this.scrollerSize / 2.0;
+		if(!this.updating)
 		{
 			Model.instance().changeMade();
+			GUIFunctions.refresh();
 		}
 	}
 
@@ -327,88 +326,92 @@ public class Controller implements CS355Controller {
 		// |v2 v4 v6|
 		// |0  0  1 |
 		
-		public AffineTransform objectToWorld(Shape shape) 
-		{
-			AffineTransform transform = new AffineTransform();
-			//Translation
-			transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, shape.getCenter().getX(), shape.getCenter().getY()));
-			//Rotation
-			transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), Math.sin(shape.getRotation()), -Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0, 0));
-			return transform;
-		}
-		
-		public AffineTransform worldToView() 
-		{
-			AffineTransform transform = new AffineTransform();
-			//Scale
-	        transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0));
-	        //Translation
-			transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -256 + 256*(1/zoom), -256 + 256*(1/zoom)));
-			return transform;
-		}
+	public AffineTransform objectToWorld(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		//Translation
+		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, shape.getCenter().getX(), shape.getCenter().getY()));
+		//Rotation
+		transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), Math.sin(shape.getRotation()), -Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0, 0));
+		return transform;
+	}
+	
+	public AffineTransform worldToView() {
+		AffineTransform transform = new AffineTransform();
+		//Scale
+        transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0));
+        //Translation
+		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -viewCenter.getX() + 256*(1/zoom), -viewCenter.getY() + 256*(1/zoom)));
+		return transform;
+	}
 
-		public AffineTransform objectToView	(Shape shape) 
-		{
-			AffineTransform transform = new AffineTransform();
-			// World to View
-	        transform.concatenate(worldToView());
-			// Object to World
-			transform.concatenate(objectToWorld(shape));
-			return transform;
-		}
-		
-		public AffineTransform viewToWorld() 
-		{
-			AffineTransform transform = new AffineTransform();
-			//Translation
-	        transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(-256 + 256*(1/zoom)), -(-256 + 256*(1/zoom))));
-	        //Scale
-	        transform.concatenate(new AffineTransform(1/zoom, 0, 0, 1/zoom, 0, 0)); 
-			return transform;
-		}
-		
-		public AffineTransform worldToObject(Shape shape) 
-		{
-			AffineTransform transform = new AffineTransform();
-			//Rotation
-			transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), -Math.sin(shape.getRotation()), Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0.0, 0.0));
-			//Translation
-			transform.concatenate(new AffineTransform(1.0, 0.0, 0.0, 1.0, -shape.getCenter().getX(), -shape.getCenter().getY()));
-			return transform;
-		}
-		
-		public AffineTransform viewToObject(Shape shape) 
-		{
-			AffineTransform transform = new AffineTransform();
-			// World to object
-			transform.concatenate(worldToObject(shape));
-			// View to world
-	        transform.concatenate(viewToWorld());
-			return transform;
-		}
-		
-		public Point2D.Double viewPointToWorldPoint(MouseEvent arg0) {
-			int x = arg0.getX();
-			int y = arg0.getY();
-			Point2D.Double point = new Point2D.Double((double)x, (double)y);
-			return viewPointToWorldPoint(point);
-		}
-		
-		public Point2D.Double viewPointToWorldPoint(Point2D.Double point) {
-			Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
-			AffineTransform transform = new AffineTransform();
-			transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, viewCenter.getX() - 256*(1/zoom), viewCenter.getY() - 256*(1/zoom))); //t
-	        transform.concatenate(new AffineTransform(1/zoom, 0, 0, 1/zoom, 0, 0));
-	        transform.transform(pointCopy, pointCopy); //transform pt to object coordinates
-	        return pointCopy;
-		}	
-		
-		public Point2D.Double objectPointToViewPoint(Shape shape, Point2D.Double point) {
-			Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
-			AffineTransform transform = objectToView(shape);
-	        transform.transform(pointCopy, pointCopy); //transform pt to object coordinates
-	        return pointCopy;
-		}
+	public AffineTransform objectToView(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		// World to View
+        transform.concatenate(worldToView());
+		// Object to World
+		transform.concatenate(objectToWorld(shape));
+		return transform;
+	}
+	
+	public AffineTransform viewToWorld() {
+		AffineTransform transform = new AffineTransform();
+		//Translation
+        transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(-viewCenter.getX() + 256*(1/zoom)), -(-viewCenter.getY() + 256*(1/zoom))));
+        //Scale
+        transform.concatenate(new AffineTransform(1/zoom, 0, 0, 1/zoom, 0, 0)); 
+		return transform;
+	}
+	
+	public AffineTransform worldToObject(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		//Rotation
+		transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), -Math.sin(shape.getRotation()), Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0.0, 0.0));
+		//Translation
+		transform.concatenate(new AffineTransform(1.0, 0.0, 0.0, 1.0, -shape.getCenter().getX(), -shape.getCenter().getY()));
+		return transform;
+	}
+	
+	public AffineTransform viewToObject(Shape shape) {
+		AffineTransform transform = new AffineTransform();
+		// World to object
+		transform.concatenate(worldToObject(shape));
+		// View to world
+        transform.concatenate(viewToWorld());
+		return transform;
+	}
+	
+	public Point2D.Double viewPointToWorldPoint(MouseEvent arg0) {
+		int x = arg0.getX();
+		int y = arg0.getY();
+		Point2D.Double point = new Point2D.Double((double)x, (double)y);
+		return viewPointToWorldPoint(point);
+	}
+	
+	public Point2D.Double viewPointToWorldPoint(Point2D.Double point) {
+		Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
+		AffineTransform transform = new AffineTransform();
+		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(viewCenter.getX() + 256*(1/zoom)), -(viewCenter.getY() + 256*(1/zoom)))); //t
+        transform.concatenate(new AffineTransform(1/zoom, 0, 0, 1/zoom, 0, 0));
+        transform.transform(pointCopy, pointCopy);
+        return pointCopy;
+	}
+	
+	public Point2D.Double worldPointToViewPoint(Point2D.Double point)
+	{
+		Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
+		AffineTransform transform = new AffineTransform();
+		transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0)); //scale
+		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -viewCenter.getX() + 256*(1/zoom), -viewCenter.getY() + 256*(1/zoom))); //t
+        transform.transform(pointCopy, pointCopy);
+        return pointCopy;
+	}
+	
+	public Point2D.Double objectPointToViewPoint(Shape shape, Point2D.Double point) {
+		Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
+		AffineTransform transform = objectToView(shape);
+        transform.transform(pointCopy, pointCopy);
+        return pointCopy;
+	}
 	
 	
 	// TODO LATER ON

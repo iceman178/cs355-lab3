@@ -165,11 +165,11 @@ public class Model extends CS355Drawing {
 				AffineTransform viewToObject = Controller.instance().viewToObject(s);
 				viewToObject.transform(ptCopy, ptCopy);
 			}
-			else {
-				// changes the coordinates from view->world
-				AffineTransform viewToWorld = Controller.instance().viewToWorld();
-				viewToWorld.transform(ptCopy, ptCopy);
-			}
+//			else {
+//				// changes the coordinates from view->world
+//				AffineTransform viewToWorld = Controller.instance().viewToWorld();
+//				viewToWorld.transform(ptCopy, ptCopy);
+//			}
 			if(s.pointInShape(ptCopy, tolerance)) {
 				curShapeIndex = a;
 				selectedColor = s.getColor();
