@@ -20,7 +20,6 @@ public class Model extends CS355Drawing {
 	private ArrayList<Shape> shapes;
 	private int curShapeIndex;
 	
-	//If the model had not been initialized, it will be.
 	public static Model instance() 
 	{
 		if (_instance == null) 
@@ -56,6 +55,7 @@ public class Model extends CS355Drawing {
 		shapes.remove(shapes.size() - 1);
 		shapes.add(newShape);
 	}
+	
 	
 	public void updateColor(Color c)
 	{
@@ -93,6 +93,7 @@ public class Model extends CS355Drawing {
 		}
 		shapes.remove(index);
 		curShapeIndex = -1;
+		GUIFunctions.refresh();
 	}
 	
 	//------------------------------MOVING-------------------------------

@@ -201,7 +201,6 @@ public class ControllerSelectState implements IControllerState
 			return false;
 		}
 		
-		// Gets currently selected shape
 		Shape shape = Model.instance().getShape(currentShapeIndex);
 		double height = -1;
 		switch(shape.getShapeType())
@@ -261,7 +260,7 @@ public class ControllerSelectState implements IControllerState
 			{
 				distance = Math.sqrt(Math.pow(cx-ptCopy.getX(), 2) + Math.pow(cy-ptCopy.getY()-9, 2));
 			}
-			return (6>=distance); 
+			return (distance <= 6); 
 		}
 		return false;
 	}

@@ -79,13 +79,22 @@ public class Controller implements CS355Controller {
 	@Override
 	public void colorButtonHit(Color c) 
 	{
-		if (c == null)
+		if(c == null)
 		{
 			return;
 		}
-		
-		Model.instance().setSelectedColor(c);
-		GUIFunctions.changeSelectedColor(c);
+		if(Model.instance().getCurShapeIndex() != -1)
+		{
+			Model.instance().setSelectedColor(c);
+			Model.instance().updateColor(c);
+			GUIFunctions.changeSelectedColor(c);
+		}
+		else
+		{
+			Model.instance().setSelectedColor(c);
+			GUIFunctions.changeSelectedColor(c);
+		}
+		Model.instance().setCurShapeIndex(-1);
 		GUIFunctions.refresh();
 	}
 
