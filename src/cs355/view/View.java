@@ -34,13 +34,10 @@ public class View implements ViewRefresher {
 			Shape currentShape = shapes.get(a);
 			
 			g2d.setColor(currentShape.getColor());
-			
 			g2d.setTransform(Controller.instance().objectToView(currentShape));
 			
-			//Uses the factory to determine the current shape to set the fill
-			g2d.fill(shapeFactory(currentShape, g2d, false)); 
-			//Uses the factory to determine the current shape to draw the image
-			g2d.draw(shapeFactory(currentShape, g2d, curShapeIndex == a)); 
+			g2d.fill(shapeFactory(currentShape, g2d, false)); //Uses the factory to determine the current shape to set the fill
+			g2d.draw(shapeFactory(currentShape, g2d, curShapeIndex == a)); //Uses the factory to determine the current shape to draw the image
 			g2d.setColor(currentShape.getColor());
 		}
 	}
@@ -64,6 +61,8 @@ public class View implements ViewRefresher {
 			}
 			return new Line2D.Double(0, 0, end.x - start.x, end.y - start.y);
 		}
+		
+		
 		else if (currentShape.getShapeType() == Shape.type.CIRCLE)
 		{
 			Circle circle = (Circle)currentShape;			
@@ -79,6 +78,8 @@ public class View implements ViewRefresher {
 			}
 			return new Ellipse2D.Double(-(width/2), -(height/2), width, height);
 		}
+		
+		
 		else if (currentShape.getShapeType() == Shape.type.ELLIPSE)
 		{
 			Ellipse ellipse = (Ellipse)currentShape;
@@ -94,6 +95,8 @@ public class View implements ViewRefresher {
 			}
 			return new Ellipse2D.Double(-(width/2), -(height/2), width, height);
 		}
+		
+		
 		else if (currentShape.getShapeType() == Shape.type.RECTANGLE)
 		{
 			Rectangle rectangle = (Rectangle)currentShape;
@@ -108,6 +111,8 @@ public class View implements ViewRefresher {
 			}
 			return new Rectangle2D.Double(-(width/2), -(height/2), width, height);
 		}
+		
+		
 		else if (currentShape.getShapeType() == Shape.type.SQUARE)
 		{
 			Square square = (Square)currentShape;
@@ -122,6 +127,8 @@ public class View implements ViewRefresher {
 			}
 			return new Rectangle2D.Double(-(width/2), -(height/2), width, height);
 		}
+		
+		
 		else if (currentShape.getShapeType() == Shape.type.TRIANGLE)
 		{
 			Triangle triangle = (Triangle)currentShape;
@@ -163,15 +170,12 @@ public class View implements ViewRefresher {
 			return tri;
 		}
 		
+		
 		return null;
 	}
 	
 	
-	
-	
-	
-	
-	
+
 	
 }
 

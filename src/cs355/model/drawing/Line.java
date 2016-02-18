@@ -1,7 +1,10 @@
 package cs355.model.drawing;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+
+import cs355.controller.Controller;
 
 /**
  * Add your line code here. You can add fields, but you cannot
@@ -56,6 +59,15 @@ public class Line extends Shape {
 	{
 		boolean result = false;
 		tolerance = 4;
+		
+		AffineTransform worldToView = Controller.instance().worldToView();
+		Point2D.Double center = new Point2D.Double(this.center.getX(), this.center.getY());
+		Point2D.Double end = new Point2D.Double(this.end.getX(), this.end.getY());
+		worldToView.transform(center, center);
+		worldToView.transform(end, end);
+		
+		
+		
 		double x0 = pt.getX(); 
 		double y0 = pt.getY(); 
 		double x1 = center.getX(); 

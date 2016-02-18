@@ -161,17 +161,14 @@ public class Model extends CS355Drawing {
 			Shape s = shapes.get(a);
 			Point2D.Double ptCopy = new Point2D.Double(curClick.getX(), curClick.getY());
 			
-			if(s.getShapeType() != Shape.type.LINE) {
+			if(s.getShapeType() != Shape.type.LINE) 
+			{
 				// changes the coordinates from view->world->object
 				AffineTransform viewToObject = Controller.instance().viewToObject(s);
 				viewToObject.transform(ptCopy, ptCopy);
 			}
-//			else {
-//				// changes the coordinates from view->world
-//				AffineTransform viewToWorld = Controller.instance().viewToWorld();
-//				viewToWorld.transform(ptCopy, ptCopy);
-//			}
-			if(s.pointInShape(ptCopy, tolerance)) {
+			if(s.pointInShape(ptCopy, tolerance)) 
+			{
 				curShapeIndex = a;
 				selectedColor = s.getColor();
 				GUIFunctions.changeSelectedColor(selectedColor);

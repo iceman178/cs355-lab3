@@ -168,7 +168,7 @@ public class Controller implements CS355Controller {
 
 	public void setZoom(Double zoomAdjustment)
 	{
-		// find screen width before zoom changes
+		// Find screen width before zoom changes
 		int prevWidth = (int) (CS355.SCROLLSTART/zoom);
 		
 		zoom = zoom * zoomAdjustment;
@@ -182,7 +182,7 @@ public class Controller implements CS355Controller {
 		
 		scrollerSize = (CS355.SCROLLSTART/zoom);
 
-		//calculate the new top left of the view
+		// Calculates the new top left of the view
 		Point2D.Double newTopLeft = new Point2D.Double(this.viewCenter.x - this.scrollerSize/2, this.viewCenter.y - this.scrollerSize/2);
 		if(newTopLeft.x < 0) newTopLeft.x = 0;
 		if(newTopLeft.y < 0) newTopLeft.y = 0;
@@ -335,7 +335,8 @@ public class Controller implements CS355Controller {
 		// |v2 v4 v6|
 		// |0  0  1 |
 		
-	public AffineTransform objectToWorld(Shape shape) {
+	public AffineTransform objectToWorld(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Translation
 		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, shape.getCenter().getX(), shape.getCenter().getY()));
@@ -344,7 +345,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform worldToView() {
+	public AffineTransform worldToView() 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Scale
         transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0));
@@ -353,7 +355,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 
-	public AffineTransform objectToView(Shape shape) {
+	public AffineTransform objectToView(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		// World to View
         transform.concatenate(worldToView());
@@ -362,7 +365,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform viewToWorld() {
+	public AffineTransform viewToWorld() 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Translation
         transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(-viewCenter.getX() + 256*(1/zoom)), -(-viewCenter.getY() + 256*(1/zoom))));
@@ -371,7 +375,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform worldToObject(Shape shape) {
+	public AffineTransform worldToObject(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		//Rotation
 		transform.concatenate(new AffineTransform(Math.cos(shape.getRotation()), -Math.sin(shape.getRotation()), Math.sin(shape.getRotation()), Math.cos(shape.getRotation()), 0.0, 0.0));
@@ -380,7 +385,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public AffineTransform viewToObject(Shape shape) {
+	public AffineTransform viewToObject(Shape shape) 
+	{
 		AffineTransform transform = new AffineTransform();
 		// World to object
 		transform.concatenate(worldToObject(shape));
@@ -389,7 +395,8 @@ public class Controller implements CS355Controller {
 		return transform;
 	}
 	
-	public Point2D.Double viewPointToWorldPoint(MouseEvent arg0) {
+	public Point2D.Double viewPointToWorldPoint(MouseEvent arg0) 
+	{
 		int x = arg0.getX();
 		int y = arg0.getY();
 		Point2D.Double point = new Point2D.Double((double)x, (double)y);
@@ -401,23 +408,6 @@ public class Controller implements CS355Controller {
 		AffineTransform transform = new AffineTransform();
 		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -(viewCenter.getX() + 256*(1/zoom)), -(viewCenter.getY() + 256*(1/zoom)))); //t
         transform.concatenate(new AffineTransform(1/zoom, 0, 0, 1/zoom, 0, 0));
-        transform.transform(pointCopy, pointCopy);
-        return pointCopy;
-	}
-	
-	public Point2D.Double worldPointToViewPoint(Point2D.Double point)
-	{
-		Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
-		AffineTransform transform = new AffineTransform();
-		transform.concatenate(new AffineTransform(zoom, 0, 0, zoom, 0, 0)); //scale
-		transform.concatenate(new AffineTransform(1.0, 0, 0, 1.0, -viewCenter.getX() + 256*(1/zoom), -viewCenter.getY() + 256*(1/zoom))); //t
-        transform.transform(pointCopy, pointCopy);
-        return pointCopy;
-	}
-	
-	public Point2D.Double objectPointToViewPoint(Shape shape, Point2D.Double point) {
-		Point2D.Double pointCopy = new Point2D.Double(point.getX(), point.getY());
-		AffineTransform transform = objectToView(shape);
         transform.transform(pointCopy, pointCopy);
         return pointCopy;
 	}

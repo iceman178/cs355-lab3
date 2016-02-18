@@ -33,7 +33,6 @@ public class ControllerDrawingState implements IControllerState
 		return avg;
 	}
 	
-	// DONE
 	@Override
 	public void mousePressed(MouseEvent arg0) 
 	{
@@ -55,7 +54,6 @@ public class ControllerDrawingState implements IControllerState
 				
 				Triangle triangle = new Triangle(Model.instance().getSelectedColor(), triCenter, p1, p2, p3);
 				Model.instance().addShape(triangle);
-				//resetCurMode();;
 				GUIFunctions.refresh();
 			}
 		}
@@ -103,15 +101,12 @@ public class ControllerDrawingState implements IControllerState
 		}
 	}
 
-	// DONE
 	@Override
 	public void mouseReleased(MouseEvent arg0) 
 	{
-		//NOTHING
 		
 	}
 
-	// DONE
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
@@ -150,7 +145,6 @@ public class ControllerDrawingState implements IControllerState
 	
 	}
 
-	// DONE
 	@Override
 	public stateType getType() 
 	{
@@ -172,10 +166,10 @@ public class ControllerDrawingState implements IControllerState
 	{
 		Circle circle = (Circle) currentShape;
 		
-		//if the cursor is moving below the upper left corner
+		// Below the first click
 		if(pt.getY() > mouseDragStart.y)
 		{
-			//if the cursor is moving to the bottom right quad
+			// Right of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -186,7 +180,7 @@ public class ControllerDrawingState implements IControllerState
 				circle.setRadius(newcorner / 2);
 			}
 
-			//if the cursor is moving to the bottom left quad
+			// Left of the first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -198,10 +192,10 @@ public class ControllerDrawingState implements IControllerState
 			}
 		}
 
-		//if the cursor is moving above the upper left corner
+		// Above the first click
 		if(pt.getY() < mouseDragStart.y)
 		{
-			//if the cursor is moving to the upper right quad
+			// Right side of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -212,7 +206,7 @@ public class ControllerDrawingState implements IControllerState
 				circle.setRadius(newcorner / 2);
 			}
 
-			//if the cursor is moving to the upper left quad
+			// Left of first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -231,10 +225,10 @@ public class ControllerDrawingState implements IControllerState
 	{
 		Ellipse ellipse = (Ellipse) currentShape;
 		
-		//if the cursor is moving below the upper left corner
+		// Below the first click
 		if(pt.getY() > mouseDragStart.y)
 		{
-			//if the cursor is moving to the bottom right quad
+			// Right of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -245,7 +239,7 @@ public class ControllerDrawingState implements IControllerState
 				ellipse.setHeight(lengthY);
 			}
 
-			//if the cursor is moving to the bottom left quad
+			// Left of the first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -257,10 +251,10 @@ public class ControllerDrawingState implements IControllerState
 			}
 		}
 
-		//if the cursor is moving above the upper left corner
+		// Above the first click
 		if(pt.getY() < mouseDragStart.y)
 		{
-			//if the cursor is moving to the upper right quad
+			// Right side of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -271,7 +265,7 @@ public class ControllerDrawingState implements IControllerState
 				ellipse.setHeight(lengthY);
 			}
 
-			//if the cursor is moving to the upper left quad
+			// Left of first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -292,7 +286,7 @@ public class ControllerDrawingState implements IControllerState
 		
 		if(pt.getY() > mouseDragStart.y)
 		{
-			//if the cursor is moving to the bottom right quad
+			// Right of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -303,7 +297,7 @@ public class ControllerDrawingState implements IControllerState
 				rectangle.setWidth(lengthX);
 			}
 
-			//if the cursor is moving to the bottom left quad
+			// Left of the first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -316,7 +310,7 @@ public class ControllerDrawingState implements IControllerState
 		}
 		else if(pt.getY() < mouseDragStart.y)
 		{
-			//if the cursor is moving to the upper right quad
+			// Right side of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -327,7 +321,7 @@ public class ControllerDrawingState implements IControllerState
 				rectangle.setWidth(lengthX);
 			}
 
-			//if the cursor is moving to the upper left quad
+			// Left of first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -346,10 +340,10 @@ public class ControllerDrawingState implements IControllerState
 	{
 		Square square = (Square) currentShape;
 		
-		//if the cursor is moving below the upper left corner
+		// Below the first click
 		if(pt.getY() > mouseDragStart.y)
 		{
-			//if the cursor is moving to the bottom right quad
+			// Right of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -360,7 +354,7 @@ public class ControllerDrawingState implements IControllerState
 				square.setSize(newcorner);
 			}
 
-			//if the cursor is moving to the bottom left quad
+			// Left of the first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -372,10 +366,10 @@ public class ControllerDrawingState implements IControllerState
 			}
 		}
 
-		//if the cursor is moving above the upper left corner
+		// Above the first click
 		if(pt.getY() < mouseDragStart.y)
 		{
-			//if the cursor is moving to the upper right quad
+			// Right side of the first click
 			if(pt.getX() > mouseDragStart.x)
 			{
 				double lengthX = pt.getX() - mouseDragStart.x;
@@ -387,7 +381,7 @@ public class ControllerDrawingState implements IControllerState
 				square.setSize(newcorner);
 			}
 
-			//if the cursor is moving to the upper left quad
+			// Left of first click
 			if(pt.getX() < mouseDragStart.x)
 			{
 				double lengthX = mouseDragStart.x - pt.getX();
@@ -401,16 +395,6 @@ public class ControllerDrawingState implements IControllerState
 		
 		Model.instance().updateLastShape(square);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
